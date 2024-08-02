@@ -16,17 +16,30 @@ pip install nome_do_pacote
 _para executar um Script
 python exemplo.py
 
+vamos criar uma pasta dentro do nosso diretorio para poder subir para o github
 
 criando um repositório no GitHub
 Depois de ter criado a conta na plataforma e instalado o Git na sua máquina, você já pode hospedar o seu primeiro projeto no GitHub.com. Para isso:
 
 Abra o terminal de comando do seu sistema operacional;
+la no github podemos criar um novo repositorio manualmente
+vai pegar o https link 
+
+echo "# nomeRepositorio" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/nomeusuario/repositorio.git
+git push -u origin main
+
+se preferir por linhas de comando :
 Dentro da pasta do projeto, digite: git init
 O comando acima irá criar toda a estrutura básica do repositório;
 Para adicionar todos os arquivos alterados à fila de atualizações do repositório, execute o comando: git add .
 Antes de sincronizar as alterações, configure seu usuário do GitHub com os comandos:
 git config --global user.name "seu nome"
-git config --global "email no GitHub"
+git config --global user.email "email no GitHub"
 Confirme as alterações com o comando: git commit -m "mensagem"
 no qual “mensagem” geralmente é um resumo das alterações.
 Adicione o remote, ou seja, o link para o servidor do seu projeto no GitHub:
@@ -36,3 +49,39 @@ git push remote origin
 Se tudo deu certo, será exibido uma mensagem confirmando o envio. Você também pode checar na página do repositório do projeto no GitHub.com.
 mais informações:
 https://docs.github.com/pt/get-started/using-git 
+
+usando agora o git status sempre pra saber quais arquivos foram adicionadosn o commit
+git add .     ou arquivo especifico
+git commit -m "iniciando "
+git status
+git push
+
+agora vamos criar um arquivo com nome_do_app.py
+
+
+_no nosso terminal vamos dar um 
+pip install flet
+
+_agora no app.py vamos importar o flet
+
+import flet as ft
+
+_e sempre vamos apelidar de ft
+
+_vamos começar a escrever nossa interface:
+ft.app(target=main)
+_assim chamamos a função app do flet e definimos que o alvo seja a main
+_dessa forma estou inicializando um aplicativo ft.app, o target me diz qual função python responsavel por definir a interface 
+_vamos definir essa função acima dessa chamada de app
+_a main vai receber um parametro que vai ser nossa page, e vamos tipar ela como page: ft.Page
+def main(page: ft.Page):
+_dessa forma o proprio flet vai fazer uma injeção de dependencia e vai passar para nossa função main a nossa pagina da nossa interface para podermos contruir ela 
+_o flet vai passar uma pagina em branco e podemos passar para a page os nossos elementos como botão, titulo e tudo mais
+_ate agora é só uma pagina em branco, nao tem absolutamente nada, vamos começar a criar, um texto primeiramente
+    txt_titulo = ft.Text('Titulo do Produto') 
+_vamos chamat o Text() do ft e add um valor string e colocar isso em uma variavel
+_temos nosso elemento de texto add, vamos colocar um campo abaixo para um input de dados
+
+
+
+
