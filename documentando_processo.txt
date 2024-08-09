@@ -130,10 +130,20 @@ Base = declarative_base() # essa base vai ser herdada na classe produto que por 
 class Produto(Base):
     __tablename__= "Produto" # nome da tabela
     id = Column(Integer, primary_key=True) # o id é uma coluna do tipo inteiro , que recebe nossa chave primaria
-    titulo = Column(String(50))
-    preco = Column(Float())
+    titulo = Column(String(50)) # adicionando uma coluna do tipo string para titulo com quantidade maxima de 50
+    preco = Column(Float()) # e uma coluna com tipo floar para preço
 
-Base.Metadata.create_all(engine)
+Base.Metadata.create_all(engine) #acessando uma função que esta em uma classe  , que chama a conexão do banco de dados
+
+_quanto rodamos "python3 models.py" 
+_ ele cria um arquivo de DB , E QUANDO ABRIMOS ESSE ARQUIVO ELE MOSTRA a estrutura do banco de dados
+_ use o sqlite viewer se estiver usando o vscode 
+_ temos que inserir od dados na tabela , entao vamos voltar la para nosso app
+
+_temos nossa função cadastrar que é ativada quando clicamos em cima do botão btn produto
+_vamos tirar as funções de print e começar a trabalhar nela 
+
+
 
 
 

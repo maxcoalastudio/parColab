@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, columns,Column, Integer, String, ForeignKey, Float
+from sqlalchemy import create_engine,Column, Integer, String, ForeignKey, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -15,4 +15,4 @@ class Produto(Base):
     titulo = Column(String(50))
     preco = Column(Float())
 
-Base.Metadata.create_all(engine)
+Base.metadata.create_all(engine)
