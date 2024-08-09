@@ -81,6 +81,59 @@ _ate agora é só uma pagina em branco, nao tem absolutamente nada, vamos começ
     txt_titulo = ft.Text('Titulo do Produto') 
 _vamos chamat o Text() do ft e add um valor string e colocar isso em uma variavel
 _temos nosso elemento de texto add, vamos colocar um campo abaixo para um input de dados
+_para eu dizer que page vai ter o atributo text, vamos add ele com add no page
+
+    page.add(
+        txt_titulo
+    )
+_vamos add um titulo tambem acima do txt_titulo
+page.title = "parColab"
+
+_vamos add um campo de texto para input com label com um placehoulder com um alinhamento e add na pagina essa variavel
+    produto = ft.TextField(label = "Digite o titulo produto aqui ", text_align=ft.TextAlign.LEFT)
+
+
+_vamos add um preço para esse produto tambem
+
+    txt_preco = ft.Text('preço do produto')
+    preco = ft.TextField(value="0", label = "Digite o preço do produto", TextAlign.LEFT)
+    btn_produto = ft.ElevatedButton('Cadastrar', on_click=cadastrar)
+_e vamos add na pagina colocando abaixo ou entre os outros elementos que precisam estar no app
+_no botao vamos add um evento onclick que recebe uma funcao cadastrar que vamos add abaixo da variavel page.title
+_vamos passar um parametro chamado event vamos passar como e para simplificar 
+    def cadastrar(e):
+        print('Fui chamado')
+_agora precisamos trabalhar com a conexão com banco de dados, criar uma tabela no banco de dados pra poder salvar esses dados .
+_vamos criar uma outra camada da nossa aplicação .
+-MVC 
+*CAMADA DE MODEL- PARTE COM BANCO DE DADOS ONDE MODELAMOS NOSSO BANCO DE DADOS
+*CAMADA DE VIEWS- A PARTE DA INTERFACE 
+*CAMADA DE CONTROLE- LOGICA DA NOSSA aplicação
+_teoricamente estamos criando uma model , vamos criar um outro arquivo
+models.py e quero usar um ORM
+nao vamos entrar em profundidade o que é sql alchemy pois é um conteudo sobre flet 
+_ o sqlAlchemy é uma ferramenta usada para manipular um banco de dados usando python produto
+_ vamos instalar ela usando o "pip install sqlalchemy"
+vou passar o centeudo da models.py
+
+from sqlalchemy import create_engine, columns,Column, Integer, String, ForeignKey, Float
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+CONN = "sqlite:///parcolab.db" # criando uma string de conexão, com sqlite que roda na maquiva virtual, e o banco de dados vai se chamar parcolab.db
+
+engine = create_engine(CONN, echo = True) # nossa conexao eu passo 2 argumentos um com CONN QUE PASSA QUAL BANCO DE DADOS, e echo que vai exibir uma mensagem
+Session = sessionmaker(bind=engine) # session que vai ser uma camada intermediaria onde os dados ficam no banco de dados, pra depois salvalos dentro do banco, 
+session = Session() 
+Base = declarative_base() # essa base vai ser herdada na classe produto que por sua ver é do sqlalchemy 
+#essa classe do python vai se transformar em uma tabena no banco de dados de acordo com os valores passados em produto
+class Produto(Base):
+    __tablename__= "Produto" # nome da tabela
+    id = Column(Integer, primary_key=True) # o id é uma coluna do tipo inteiro , que recebe nossa chave primaria
+    titulo = Column(String(50))
+    preco = Column(Float())
+
+Base.Metadata.create_all(engine)
 
 
 
