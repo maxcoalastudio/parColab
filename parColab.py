@@ -1,9 +1,21 @@
 import flet as ft 
+from models import Produto
+from sqlalchemy import create_engine 
+from sqlalchemy.orm import sessionmaker 
+
+CONN = "sqlite:///parcolab.db"
+engine = create_engine(CONN, echo = True) 
+Session = sessionmaker(bind=engine)
+session = Session()
+
 
 def main(page: ft.Page):
-    page.title = "parColab"
+    page.title = "Cadastro parColab"
     def cadastrar(e):
-        print(produto.value ,  preco.value)
+        novo_produto = Produto(titulo=produto.value, preco=preco.value)
+        session.add(novo_produto)
+        session.commit()
+        print('Produto salvo com Sucesso!')
 
     txt_titulo = ft.Text('Titulo do produto:')
     produto = ft.TextField(label="Digite o titulo do produto", text_align=ft.TextAlign.LEFT)

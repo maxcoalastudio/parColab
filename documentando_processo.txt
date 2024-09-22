@@ -100,9 +100,11 @@ _vamos add um preço para esse produto tambem
     btn_produto = ft.ElevatedButton('Cadastrar', on_click=cadastrar)
 _e vamos add na pagina colocando abaixo ou entre os outros elementos que precisam estar no app
 _no botao vamos add um evento onclick que recebe uma funcao cadastrar que vamos add abaixo da variavel page.title
-_vamos passar um parametro chamado event vamos passar como e para simplificar 
+_vamos passar um parametro chamado event vamos passar como 'e' para simplificar 
     def cadastrar(e):
         print('Fui chamado')
+_quando executamos e clicamos em cadastrar em prita no terminal "fui chamado"
+_precisamos acessar os valores tanto do que ele digitou em produto quanto do que ele digitou em preço, então invez de printar "fui chamado", ele printa produto.value e preco.value
 _agora precisamos trabalhar com a conexão com banco de dados, criar uma tabela no banco de dados pra poder salvar esses dados .
 _vamos criar uma outra camada da nossa aplicação .
 -MVC 
@@ -137,14 +139,41 @@ Base.Metadata.create_all(engine) #acessando uma função que esta em uma classe 
 
 _quanto rodamos "python3 models.py" 
 _ ele cria um arquivo de DB , E QUANDO ABRIMOS ESSE ARQUIVO ELE MOSTRA a estrutura do banco de dados
-_ use o sqlite viewer se estiver usando o vscode 
+_ use o sqlite viewer se estiver usando o vscode para visualizar, ele esta disposto em extensões
 _ temos que inserir od dados na tabela , entao vamos voltar la para nosso app
 
 _temos nossa função cadastrar que é ativada quando clicamos em cima do botão btn produto
 _vamos tirar as funções de print e começar a trabalhar nela 
+_vamos criar uma variavel chamada novo_produto = Produto(titulo=produto.value, preco=preco.value) que vai ser a variavel que eu vou instaciar a classe produto 
+_vamos precisar importar ela 
+from models import Produto
+_o id como é uma primaryKey não precisamos passar, ele é gerado automaticamente
 
+_o que precisamos fazer agora é pegar isso aqui e add na camada intermediaria do sqlAlchemy, mostrando que tem uma alteração pra ser feita no banco de dados, então abaixo da variavel criada vamos fazer. 
+session.add(novo_produto)
+_mas para fazermos isso temos que ter conexão com o banco de dados, e a conexao foi feita apenas no arquivo model.py
+_então vamos copiar as linhas do model.py 
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
+CONN = "sqlite:///parcolab.db"
+engine = create_engine(CONN, echo = True) 
+Session = sessionmaker(bind=engine)
+session = Session() 
+
+_então agora sim , então ele faz assim , olha sqlAlchemy vou fazer uma operação no banco de dodos,o ssession.add(novo_produto) só informa para o sqlalchemy que foi feita uma alteração no banco de dados, mas isso não foi de fato efetivado no banco de dados.
+_pra de fato efetivarmos no banco de dados precisamos executar 
+ssetion.commit()
+_isso vai salvar nosso produtos la no banco, e podemos dar um print para informar isso!
+print('Produto salvo com Sucesso!')
+
+_funcionando vamos subir para o github
+usando agora o git status sempre pra saber quais arquivos foram adicionadosn o commit
+git add .     ou arquivo especifico
+git commit -m "registro do produto no DB "
+git status
+git push
 
 
 
