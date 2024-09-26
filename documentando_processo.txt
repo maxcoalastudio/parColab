@@ -175,5 +175,125 @@ git commit -m "registro do produto no DB "
 git status
 git push
 
+_o que falta pra realizar o que eu pretendia fazer?
+_mostrar 2 mensagens de produto cadastrado com sucesso ou erro ao cadastrar produto, e listar todos os produtos cadastrados no bando
+_para podermos listar todos os produtos podemos usar o listview, uma estrutura do proprio flet pra ser exibida na interface
+_ acima da função cadastrar vamos criar uma variavel lista_produtos = ft.ListView() 
+_essa lista ainda esta vazia , eu quero add todos os dados presentes no banco , entao vamos primeiro buscar esses dados pra depois add na lista
+_logo apos a função page.add 
+_Para buscar um produto do sqlAlchemy é bem simples, usamos o session e fazemos uma consulta usando a função query pro uma tabela, e vamos usar um filtro para os dados  entao o filtro para todos vai ser usado 
+for p in session.query(Produto).all():
+    lista_produtos.controls.append(ft.Text(p.titulo))
 
+_para fazermos aparecer na interface usamos o 
+page.add(lista_produtos)
 
+_ o produto só aparecera se eu registrar o produto e logo apos se eu fechar minha applicao e abrila novamente, isso é um problema !
+_precisamos atualizar esse preoduto sem fechar logo depois de cadastrar o novo produto
+_podemos fazer logo apos salvar nosso produto com o commit eu replico esse codigo que criamos logo apos o commit
+lista_produtos.controls.append(ft.Text(produto.value))
+page.update()
+_isso resolve nosso primeiro problema
+_mas ainda esta feio vamos add mais coisas no nosso loop para poder estilizar, vamos add um container
+for p in session.query(Produto).all():
+    lista_produtos.controls.append(
+        ft.Container(
+            ft.Text(p.titulo),
+            bgcolor=ft.colors.BLACK12,
+            padding = 15,
+            alignment = ft.alignment.center,
+            margin = 3,
+            border_radius = 10
+        )
+    )
+
+_agora para sempre conseguir manter esse padrão ao add um novo item vamos copiar todo ft.Container
+e add no lugar do ft.Text
+
+_e o p.text dentro do container trocamos por produto.value
+
+_agora eu quero que quando deu certo eu salvar o item no bando de dados ele me mostre uma mensagem(produto salvo com sucesso)
+_se acontecer algum erro ele mostra (erro interno do sistema/erro ao cadastrar produto )
+vamos criar dois campo de texto acima de txt_titulo sendo
+txt_erro = ft.Container(ft.Text('Erro ao salvar o produto!'), visible=False, bgcolor=ft.colors.RED, padding=10, alignment=ft.alignment.center)#  não visivel
+txt_acerto = ft.Container(ft.Text('produto salvo com Sucesso!'), visible=False, bgcolor=ft.colors.GREEN, padding=10, alignment=ft.alignment.center)#  não visivel
+_so vamos tornalo visivel quando uma ação acontecer, E COM formatação com cores indicando o status
+
+_esta vendo nossa função cadastrar ? como eu sei que consegui salvar de fato no banco de dados ? posso utilizar um tratamento de excessões do python que é o try e o except
+
+_colocamos todo codigo dentro de cadastrar ate e incluindo o lista de produtos dentro de try e abaixo disso vamos criar um except com o pass por enquanto
+_quando o try funcionar eu quero habilitar a visibilidade do sucesso e quando ele pular apara o except eu quero habilitar a visibilidade do erro
+_vamos add os textos no page.add
+_quando habilito o visible de um tenho que dasabilitar de outro , o codigo fica assim :
+
+import flet as ft 
+from models import Produto
+from sqlalchemy import create_engine 
+from sqlalchemy.orm import sessionmaker 
+
+CONN = "sqlite:///parcolab.db"
+engine = create_engine(CONN, echo = True) 
+Session = sessionmaker(bind=engine)
+session = Session()
+
+def main(page: ft.Page):
+    page.title = "Cadastro parColab"
+
+    lista_produtos = ft.ListView()
+    
+    def cadastrar(e):
+        try:
+            novo_produto = Produto(titulo=produto.value, preco=preco.value)
+            session.add(novo_produto)
+            session.commit()
+            lista_produtos.controls.append(ft.Container(
+                    ft.Text(produto.value),
+                    bgcolor=ft.colors.BLACK12,
+                    padding = 15,
+                    alignment = ft.alignment.center,
+                    margin = 3,
+                    border_radius = 10
+                )
+                )
+            txt_erro.visible = False
+            txt_acerto.visible = True
+
+        except:
+            txt_erro.visible = True
+            txt_acerto.visible = False
+        page.update()
+        print('Produto salvo com Sucesso!')
+    txt_erro = ft.Container(ft.Text('Erro ao salvar o produto!'), visible=False, bgcolors=ft.color.RED, padding=10, alignment=ft.alignment.center)#não visivel
+    txt_acerto = ft.Container(ft.Text('produto salvo com Sucesso!'), visible=False, bgcolors=ft.color.GREEN, padding=10, alignment=ft.alignment.center)#não visivel
+
+    txt_titulo = ft.Text('Titulo do produto:')
+    produto = ft.TextField(label="Digite o titulo do produto", text_align=ft.TextAlign.LEFT)
+    txt_preco = ft.Text('Preço do produto')
+    preco = ft.TextField(value="0", label="Digite o preço do produto", text_align=ft.TextAlign.LEFT)
+    btn_produto = ft.ElevatedButton('Cadastrar', on_click=cadastrar)
+    page.scroll = "always" #add um scrollbar
+    page.add(
+        txt_acerto,
+        txt_erro,
+        txt_titulo,
+        produto,
+        txt_preco,
+        preco,
+        btn_produto
+    )
+
+    for p in session.query(Produto).all():
+        lista_produtos.controls.append(
+            ft.Container(
+                ft.Text(p.titulo),
+                bgcolor=ft.colors.BLACK12,
+                padding = 15,
+                alignment = ft.alignment.center,
+                margin = 3,
+                border_radius = 10
+            )
+        )
+
+    page.add(lista_produtos,
+             )
+ft.app(target=main)
